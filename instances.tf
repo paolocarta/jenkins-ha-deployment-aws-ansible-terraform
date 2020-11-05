@@ -1,11 +1,11 @@
 #Get Linux AMI ID using SSM Parameter endpoint in master region
-data "aws_ssm_parameter" "linuxAmi" {
+data "aws_ssm_parameter" "linux_ami" {
   provider = aws.region-master
   name     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
 #Get Linux AMI ID using SSM Parameter endpoint in worker region
-data "aws_ssm_parameter" "linuxAmiOregon" {
+data "aws_ssm_parameter" "linux_ami_workers_region" {
   provider = aws.region-worker
   name     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
@@ -28,7 +28,7 @@ resource "aws_key_pair" "worker-key" {
 resource "aws_instance" "jenkins_master" {
 
   provider                    = aws.region-master
-  ami                         = data.aws_ssm_parameter.linuxAmi.value
+  ami                         = data.aws_ssm_parameter.linux_ami.value
   instance_type               = var.instance-type
   key_name                    = aws_key_pair.master-key.key_name
   associate_public_ip_address = true
@@ -52,7 +52,7 @@ resource "aws_instance" "jenkins_worker" {
 
   provider                    = aws.region-worker
   count                       = var.workers-count
-  ami                         = data.aws_ssm_parameter.linuxAmiOregon.value
+  ami                         = data.aws_ssm_parameter.linux_ami_workers_region.value
   instance_type               = var.instance-type
   key_name                    = aws_key_pair.worker-key.key_name
   associate_public_ip_address = true
