@@ -59,18 +59,19 @@ resource "aws_instance" "jenkins_worker" {
   vpc_security_group_ids      = [aws_security_group.jenkins_workers_sg.id]
   subnet_id                   = aws_subnet.subnet_1_workers.id
 
-  provisioner "remote-exec" {
-    when = destroy
-    inline = [
-      "java -jar /home/ec2-user/jenkins-cli.jar -auth @/home/ec2-user/jenkins_auth -s http://${aws_instance.jenkins_master.private_ip}:8080 -auth @/home/ec2-user/jenkins_auth delete-node ${self.private_ip}"
-    ]
-    connection {
-      type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("~/.ssh/jenkins-aws-ssh-access")
-      host        = self.public_ip
-    }
-  }
+  # provisioner "remote-exec" {
+  #   when = destroy
+  #   inline = [
+  #     "java -jar /home/ec2-user/jenkins-cli.jar -auth @/home/ec2-user/jenkins_auth \
+  #     -s http://${aws_instance.jenkins_master.private_ip}:8080 -auth @/home/ec2-user/jenkins_auth delete-node ${self.private_ip}"
+  #   ]
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ec2-user"
+  #     private_key = file("~/.ssh/jenkins-aws-ssh-access")
+  #     host        = self.public_ip
+  #   }
+  # }
 
   provisioner "local-exec" {
     command = <<EOF
