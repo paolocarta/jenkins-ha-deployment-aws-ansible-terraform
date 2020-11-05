@@ -141,10 +141,10 @@ resource "aws_main_route_table_association" "set_worker_default_rt_assoc" {
 
 
 #Create SG for allowing TCP/8080 from * and TCP/22 from your IP in eu-south-1
-resource "aws_security_group" "jenkins_sg" {
+resource "aws_security_group" "jenkins_master_sg" {
 
   provider    = aws.region-master
-  name        = "jenkins_sg"
+  name        = "jenkins_master_sg"
   description = "Allow TCP/8080 & TCP/22"
   vpc_id      = aws_vpc.vpc_master.id
   
@@ -184,7 +184,7 @@ resource "aws_security_group" "loadbalancer_sg" {
   name        = "loadbalancer_sg"
   description = "Allow 443 and traffic to Jenkins SG"
   vpc_id      = aws_vpc.vpc_master.id
-  
+
   ingress {
     description = "Allow 443 from anywhere"
     from_port   = 443
@@ -209,11 +209,12 @@ resource "aws_security_group" "loadbalancer_sg" {
 
 #Create SG for allowing TCP/22 from your IP in eu-central-1
 resource "aws_security_group" "jenkins_workers_sg" {
-  provider = aws.region-worker
 
+  provider    = aws.region-worker
   name        = "jenkins_workers_sg"
   description = "Allow TCP/8080 & TCP/22"
   vpc_id      = aws_vpc.vpc_workers.id
+
   ingress {
     description = "Allow 22 from our public IP"
     from_port   = 22
