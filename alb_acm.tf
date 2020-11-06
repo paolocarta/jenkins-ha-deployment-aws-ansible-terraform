@@ -22,7 +22,7 @@ resource "aws_acm_certificate_validation" "cert" {
 resource "aws_lb" "jenkins_master_app_loadbalancer" {
 
   provider           = aws.region-master
-  name               = "jenkins_master_app_loadbalancer"
+  name               = "jenkins-master-app-loadbalancer"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.loadbalancer_sg.id]
