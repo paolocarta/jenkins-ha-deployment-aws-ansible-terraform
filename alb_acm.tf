@@ -36,9 +36,9 @@ resource "aws_lb_target_group" "app-lb-tg" {
 
   provider    = aws.region-master
   name        = "app-lb-tg"
+  vpc_id      = aws_vpc.vpc_master.id
   port        = 8080
   target_type = "instance"
-  vpc_id      = aws_vpc.vpc_master.id
   protocol    = "HTTP"
 
   health_check {
@@ -54,7 +54,7 @@ resource "aws_lb_target_group" "app-lb-tg" {
   }
 }
 
-resource "aws_lb_listener" "jenkins-listener" {
+resource "aws_lb_listener" "jenkins_listener_ssl" {
 
   provider          = aws.region-master
   load_balancer_arn = aws_lb.jenkins_master_app_loadbalancer.arn
@@ -69,7 +69,7 @@ resource "aws_lb_listener" "jenkins-listener" {
   }
 }
 
-resource "aws_lb_listener" "jenkins-listener-http" {
+resource "aws_lb_listener" "jenkins_listener_http" {
 
   provider          = aws.region-master
   load_balancer_arn = aws_lb.jenkins_master_app_loadbalancer.arn
@@ -78,6 +78,7 @@ resource "aws_lb_listener" "jenkins-listener-http" {
 
   default_action {
     type = "redirect"
+    
     redirect {
       port        = "443"
       protocol    = "HTTPS"
@@ -86,8 +87,10 @@ resource "aws_lb_listener" "jenkins-listener-http" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "jenkins_master_attach" {
+resource "aws_lb_target_group_attachment" "jenkins_master_lb_tg_attach" {
+
   provider         = aws.region-master
+  
   target_group_arn = aws_lb_target_group.app-lb-tg.arn
   target_id        = aws_instance.jenkins_master.id
   port             = 8080
