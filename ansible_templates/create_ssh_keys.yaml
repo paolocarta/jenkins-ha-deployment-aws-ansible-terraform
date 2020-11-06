@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Generate SSH Keypair
+      openssh_keypair:
+        path: ~/.ssh/jenkins-aws-ssh-access
+        type: rsa
+        size: 2048
