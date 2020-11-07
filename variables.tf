@@ -8,10 +8,10 @@ variable "instance-type" {
   default = "t3.micro"
 }
 
-variable "dns-name" {
-  type    = string
-  default = "<public-hosted-zone-ending-with-dot>" 
-}
+# variable "dns-name" {
+#   type    = string
+#   default = "<public-hosted-zone-ending-with-dot>" 
+# }
 
 variable "profile" {
   type    = string
@@ -20,12 +20,12 @@ variable "profile" {
 
 variable "region-master" {
   type    = string
-  default = "eu-south-1"
+  default = "eu-central-1"
 }
 
 variable "region-worker" {
   type    = string
-  default = "eu-central-1"
+  default = "eu-west-3"
 }
 
 #How many Jenkins workers to spin up
