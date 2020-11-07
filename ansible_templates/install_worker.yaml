@@ -3,17 +3,6 @@
   become: yes
   remote_user: ec2-user
   tasks:
-    - name: Generate SSH Keypair
-      openssh_keypair:
-        path: /home/ec2-user/.ssh/jenkins-aws-ssh-access
-        type: rsa
-        size: 2048
-        group: ec2-user
-        owner: ec2-user
-    
-    - name: Add own key to authorized_keys file
-      shell: "cat /home/ec2-user/.ssh/jenkins-aws-ssh-access.pub >> /home/ec2-user/.ssh/authorized_keys && chmod 600 /home/ec2-user/.ssh/authorized_keys"
-
     - name: Copy over Jenkins Worker Node creation payload xml
       vars: 
         ipv4: "{{ ansible_default_ipv4.address }}"
@@ -22,6 +11,13 @@
         dest: /home/ec2-user/node.xml
         owner: ec2-user
         mode: '0644'
+
+    - name: Copy private key jenkins-aws-ssh-access
+      copy:
+        src: ~/.ssh/jenkins-aws-ssh-access
+        dest: /home/ec2-user/.ssh/
+        owner: ec2-user
+        mode: '0600'
 
     - name: Read generated private key jenkins-aws-ssh-access
       slurp:
