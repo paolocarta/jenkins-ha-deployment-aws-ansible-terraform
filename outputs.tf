@@ -24,6 +24,6 @@ output "Jenkins-Worker-Private-IPs" {
   }
 }
 
-output "url" {
-  value = aws_route53_record.jenkins.fqdn
-}
+# output "url" {
+#   value = aws_route53_record.jenkins.fqdn
+# }
